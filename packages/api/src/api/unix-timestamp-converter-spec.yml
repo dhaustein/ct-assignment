@@ -1,0 +1,51 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Unix Timestamp Converter API
+  description: "An API to convert between Unix timestamps and human-readable date strings"
+servers:
+  - url: https://helloacm.com
+paths:
+  /api/unix-timestamp-converter/:
+    get:
+      summary: "Convert Unix timestamp or date-time string"
+      operationId: convertTimestamp
+      tags:
+        - timestamp
+      parameters:
+        - name: cached
+          in: query
+          description: "Enable caching for the conversion"
+          required: false
+          schema:
+            type: string
+        - name: s
+          in: query
+          description: "The Unix timestamp (integer) or date string (YYYY-MM-DD HH:MM:SS) to convert"
+          required: false
+          schema:
+            oneOf:
+              - type: integer
+                example: 1672531200
+              - type: string
+                example: "2023-01-01 00:00:00"
+      responses:
+        200:
+          description: "Conversion result. On success, returns a timestamp object or human-readable date time. On invalid input, returns false"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: integer
+                    description: Unix timestamp
+                  - type: string
+                    description: "Date string in 'YYYY-MM-DD HH:MM:SS' format"
+                  - type: boolean
+                    description: Returns false if the input is invalid
+        404:
+          description: "Invalid query format or missing query parameters"
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "false"

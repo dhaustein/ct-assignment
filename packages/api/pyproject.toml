@@ -1,0 +1,28 @@
+[project]
+name = "api"
+version = "0.1.0"
+description = "Pretend API backend for the application"
+readme = "README.md"
+authors = [
+    { name = "dhaustein" }
+]
+requires-python = ">=3.13"
+dependencies = [
+]
+
+[project.scripts]
+api = "api:main"
+
+[build-system]
+requires = ["uv_build>=0.8.8,<0.9.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "urllib3>=2.1.0,<3.0.0",
+    "python-dateutil>=2.8.2",
+    "pydantic>=2",
+    "typing-extensions>=4.7.1",
+    "lazy-imports>=1.0.1",
+]

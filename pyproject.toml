@@ -1,0 +1,53 @@
+[project]
+name = "timestamp-converter"
+version = "0.1.0"
+description = "Timestamp converter assignment and test suite for the CT QA engineer role"
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [
+    {name = "dhaustein"},
+]
+
+dependencies = []
+
+[tool.uv.sources]
+api = { workspace = true }
+api_sdk = { workspace = true }
+frontend = { workspace = true }
+
+[tool.uv.workspace]
+members = [
+    "packages/api",
+    "packages/frontend",
+    "libs/api_sdk",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "api",
+    "frontend",
+    "api_sdk",
+]
+# root package itself is not intended to be installed
+package = false
+
+[tool.ruff]
+lint.ignore = ["E501"]
+extend-exclude = [
+  "__pycache__",
+  ".eggs",
+  ".git",
+  ".venv",
+  "build",
+  "dist",
+  "notebooks",
+  ".cache"
+]
+line-length = 120
+
+[tool.pyright]
+exclude = [".venv", ".github", "docs", "tests", ".devcontainer"]
+include = ["packages", "libs"]
+pythonVersion = "3.12"
+venvPath = "."
+venv = ".venv"
