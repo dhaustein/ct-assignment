@@ -1,3 +1,4 @@
+
 import pytest
 from .fixtures.timestamp import TestTimestampApi
 from .utils.time_tools import unix_to_datetime_string, datetime_string_to_unix
@@ -33,7 +34,7 @@ def test_convert_timestamp_regular_time(timestamp_client: TestTimestampApi) -> N
     res = timestamp_client.convert(timestamp=ts)
 
     assert res.status_code == 200
-    assert res.payload == unix_to_datetime_string(ts, force_12h=True)
+    assert res.payload == unix_to_datetime_string(ts, force_12h=True), f"Expected unix timestamp as int, got {res.payload}"
 
 def test_convert_timestamp_one_second_after_midnight(timestamp_client: TestTimestampApi) -> None:
     """
@@ -122,7 +123,7 @@ def test_convert_timestamp_as_string(timestamp_client: TestTimestampApi) -> None
     res = timestamp_client.convert(timestamp=ts_str)
 
     assert res.status_code == 200
-    assert res.payload == unix_to_datetime_string(ts_int)
+    assert res.payload == unix_to_datetime_string(ts_int), f"Expected datetime as string, got {res.payload}"
 
 def test_convert_string_midnight(timestamp_client: TestTimestampApi) -> None:
     """
@@ -164,7 +165,7 @@ def test_convert_string_invalid_value(timestamp_client: TestTimestampApi) -> Non
     res = timestamp_client.convert(timestamp="foo")
 
     assert res.status_code == 200
-    assert not res.payload
+    assert not res.payload, f"Expected empty payload for invalid string, got {res.payload}"
 
 def test_convert_string_non_existing_leap_day(timestamp_client: TestTimestampApi) -> None:
     """
@@ -221,7 +222,7 @@ def test_convert_string_with_timezone(timestamp_client: TestTimestampApi) -> Non
     res = timestamp_client.convert(timestamp=dt)
 
     assert res.status_code == 200
-    assert res.payload == 686282400  # 1991-10-01 2:00:00
+    assert res.payload == 686282400
 
 def test_convert_string_12_hour_format(timestamp_client: TestTimestampApi) -> None:
     """
@@ -244,7 +245,7 @@ def test_convert_string_unicode(timestamp_client: TestTimestampApi) -> None:
     res = timestamp_client.convert(timestamp=dt)
 
     assert res.status_code == 200
-    assert not res.payload
+    assert not res.payload, f"Expected empty payload for unicode string, got {res.payload}"
 
 def test_convert_empty_string(timestamp_client: TestTimestampApi) -> None:
     """
@@ -253,7 +254,7 @@ def test_convert_empty_string(timestamp_client: TestTimestampApi) -> None:
     res = timestamp_client.convert(timestamp="")
 
     assert res.status_code == 200
-    assert not res.payload
+    assert not res.payload, f"Expected empty payload for empty string, got {res.payload}"
 
 def test_convert_float_timestamp(timestamp_client: TestTimestampApi) -> None:
     """
@@ -274,4 +275,4 @@ def test_convert_boolean_input(timestamp_client: TestTimestampApi) -> None:
     res = timestamp_client.convert(timestamp=True)
 
     assert res.status_code == 200
-    assert not res.payload
+    assert not res.payload, f"Expected no payload for boolean input, got {res.payload}"
