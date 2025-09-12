@@ -32,3 +32,5 @@ dev = [
 filterwarnings = [
     "ignore:cannot collect test class 'TestTimestampApi' because it has a __init__ constructor",
 ]
+log_cli = true
+log_cli_level = "INFO"
