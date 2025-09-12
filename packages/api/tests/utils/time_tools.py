@@ -1,12 +1,13 @@
 from datetime import datetime, timezone
 
 
-def unix_to_datetime_string(timestamp: int) -> str:
+def unix_to_datetime_string(timestamp: int, force_12h: bool = False) -> str:
     """
     Convert a Unix timestamp to a datetime string in the format 'YYYY-MM-DD HH:MM:SS'
 
     Args:
         timestamp: Unix timestamp as integer (seconds since epoch)
+        force_12h: force the time to be in 12h format
 
     Returns:
         Datetime string in format 'YYYY-MM-DD HH:MM:SS' in UTC timezone
@@ -20,6 +21,11 @@ def unix_to_datetime_string(timestamp: int) -> str:
     if dt.hour == 0:
         # hotfix for the API defect around the 12th hour
         return dt.strftime('%Y-%m-%d 12:%M:%S')
+
+    # TODO this is where a Jira ticket or similar would be to track the bug
+    if force_12h:
+        # hotfix for the API returning 12h date time format instead of 24h
+        return dt.strftime('%Y-%m-%d %I:%M:%S')
 
     return dt.strftime('%Y-%m-%d %H:%M:%S')
 
