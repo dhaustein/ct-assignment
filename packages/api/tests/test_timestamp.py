@@ -1,54 +1,48 @@
-from api_sdk import ApiClient, Configuration, TimestampApi
 import pytest
+from .fixtures.timestamp import TestTimestampApi
+from .utils.time_tools import unix_to_datetime_string, datetime_string_to_unix
 
-BASE_URL = "https://helloacm.com"
 
-@pytest.fixture
-def api_client() -> ApiClient:
-    """Pytest fixture to create an API client."""
-    configuration = Configuration(host=BASE_URL)
-    with ApiClient(configuration) as client:
-        yield client
-
-@pytest.fixture
-def timestamp_api(api_client: ApiClient) -> TimestampApi:
-    """Pytest fixture to create a TimestampApi instance."""
-    return TimestampApi(api_client)
-
-def test_convert_timestamp_integer(timestamp_api: TimestampApi):
+def test_convert_timestamp_midnight(timestamp_client: TestTimestampApi) -> None:
     """
-    Test converting a Unix timestamp integer to a date string.
+    Test converting a Unix midnight timestamp integer to a date string.
     """
-    test_timestamp = 1672531200
+    ts = 1672531200  # 2023-01-01 00:00:00
 
-    # TODO cached= must be eny empty string (bake this into the wrapper later)
-    response = timestamp_api.convert_timestamp(cached="", s=test_timestamp)
+    res = timestamp_client.convert(timestamp=ts)
 
-    # The API returns a ConvertTimestamp200Response object.
-    # The actual data is in `actual_instance`.
-    assert response.actual_instance is not None
+    assert res.status_code == 200
+    assert res.payload == unix_to_datetime_string(ts)
 
-    # NOTE the datetime should be by default GMT and not affected by the timezone
-    assert response.actual_instance == "2023-01-01 12:00:00"
-
-def test_convert_timestamp_string(timestamp_api: TimestampApi):
+def test_convert_datetime_midnight(timestamp_client: TestTimestampApi) -> None:
     """
-    Test converting a date string to a Unix timestamp.
+    Test converting a midnight date string to a Unix timestamp.
     """
-    test_date_string = "2023-01-01 00:00:00"
-    expected_timestamp = 1672531200
+    dt = "2023-01-01 00:00:00"  # 1672531200
 
-    response = timestamp_api.convert_timestamp(cached="", s=test_date_string)
+    res = timestamp_client.convert(timestamp=dt)
 
-    assert response.actual_instance is not None
-    assert not isinstance(response.actual_instance, bool)
-    assert response.actual_instance == expected_timestamp
+    assert res.status_code == 200
+    assert res.payload == datetime_string_to_unix(dt)
 
-def test_convert_timestamp_invalid(timestamp_api: TimestampApi):
+def test_convert_one_am(timestamp_client: TestTimestampApi) -> None:
+    """
+    Test converting 1AM date string to a Unix timestamp.
+    """
+    dt = "2023-01-01 01:00:00"
+
+    res = timestamp_client.convert(timestamp=dt)
+
+    assert res.status_code == 200
+    assert res.payload == datetime_string_to_unix(dt)
+
+def test_convert_timestamp_invalid_string(timestamp_client: TestTimestampApi) -> None:
     """
     Test sending an invalid string to the converter.
+    Response should be HTTP 200 but the payload contains only 'false'.
     """
     invalid_string = "foo"
 
-    response = timestamp_api.convert_timestamp(cached="", s=invalid_string)
-    assert not response.actual_instance
+    res = timestamp_client.convert(timestamp=invalid_string)
+    assert res.status_code == 200
+    assert not res.payload
