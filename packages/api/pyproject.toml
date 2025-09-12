@@ -26,3 +26,8 @@ dev = [
     "typing-extensions>=4.7.1",
     "lazy-imports>=1.0.1",
 ]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:cannot collect test class 'TestTimestampApi' because it has a __init__ constructor",
+]
