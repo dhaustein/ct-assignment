@@ -2,6 +2,7 @@ import pytest
 from api_sdk import ApiClient, TimestampApi, ApiResponse
 from api_sdk.models import ConvertTimestamp200Response
 from typing import Optional, Mapping, Union, Dict, Any
+import logging
 
 
 class ConvertedRes:
@@ -32,16 +33,27 @@ class ConvertedRes:
 
 
 class TestTimestampApi(TimestampApi):
+    def __init__(self, api_client: ApiClient, logger: logging.Logger):
+        super().__init__(api_client)
+        self.logger = logger
+
     def convert(
         self,
         timestamp: int | str,  # TODO should be Datetime instead of plain str?
         cached: str | None = ""
         ) -> ConvertedRes:
         """Convert timestamp"""
+        self.logger.info("Converting timestamp: %s", timestamp)
+
         res = self.convert_timestamp_with_http_info(cached=cached, s=timestamp)
+
+        self.logger.info("Conversion response status: %s", res.status_code)
+        self.logger.debug("Conversion response payload: %s", res.data)
+
         return ConvertedRes(res)
 
 @pytest.fixture(scope="session")
-def timestamp_client(api_client: ApiClient) -> TimestampApi:
+def timestamp_client(api_client: ApiClient, logger: logging.Logger) -> TestTimestampApi:
     """Session fixture to create a Timestamp endpoint instance"""
-    return TestTimestampApi(api_client)
+    logger.info("Creating Timestamp API client")
+    return TestTimestampApi(api_client, logger)
