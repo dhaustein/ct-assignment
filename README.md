@@ -11,7 +11,7 @@ Re-generate the API SDK
 uv run --package api-sdk -- bash utils/generate-api-client.sh
 ```
 
-Run API tests
+Run API tests (in parallel)
 ```shell
 uv run --package api -- pytest -v -n auto packages/api/tests/
 ```
