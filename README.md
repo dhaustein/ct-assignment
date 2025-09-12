@@ -13,5 +13,5 @@ uv run --package api-sdk -- bash utils/generate-api-client.sh
 
 Run API tests
 ```shell
-uv run --package api -- pytest -v packages/api/tests/
+uv run --package api -- pytest -v -n auto packages/api/tests/
 ```
