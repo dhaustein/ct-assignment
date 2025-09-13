@@ -19,7 +19,6 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
-    "pytest>=8.4.2",
     "pytest-xdist>=3.8.0",
     "urllib3>=2.1.0,<3.0.0",
     "python-dateutil>=2.8.2",
