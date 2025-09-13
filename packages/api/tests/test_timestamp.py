@@ -1,4 +1,3 @@
-import pytest
 import logging
 from .fixtures.timestamp import TestTimestampApi
 from .utils.time_tools import unix_to_datetime_string, datetime_string_to_unix
