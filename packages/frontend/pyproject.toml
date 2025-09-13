@@ -9,6 +9,12 @@ authors = [
 requires-python = ">=3.13"
 dependencies = []
 
+[project.optional-dependencies]
+test = [
+    "playwright>=1.55.0",
+    "pytest-playwright>=0.7.1",
+]
+
 [project.scripts]
 frontend = "frontend:main"
 
