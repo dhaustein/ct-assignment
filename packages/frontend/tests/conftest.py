@@ -1,3 +1,4 @@
+
 import pytest
 from playwright.sync_api import Page, sync_playwright, Browser
 from packages.frontend.tests.pages.timestamp_page import TimestampConverterPage
@@ -12,8 +13,16 @@ PLAYWRIGHT_TRACING = True
 @pytest.fixture(scope="session")
 def chromium_browser() -> Generator[Browser, None, None]:
     """
-    Main browser fixture that connects to the running browser server
-    in container.
+    Main browser fixture that connects to the running browser server in container.
+
+    This fixture establishes a connection to a Playwright browser server running
+    in a container and provides a Browser instance for the entire test session.
+
+    The browser is closed when the session ends.
+
+    Returns:
+        Generator[Browser, None, None]: A generator yielding a Playwright Browser
+                                       instance connected to the remote server.
     """
     with sync_playwright() as p:
         browser = p.chromium.connect(PLAYWRIGHT_WS_ENDPOINT)
@@ -25,6 +34,20 @@ def page(chromium_browser: Browser, request) -> Generator[Page, None, None]:
     """
     Overrides the default 'page' fixture to create a new page for each test
     from the session-scoped browser.
+
+    Creates a new browser context and page for each test, with optional tracing
+    enabled.
+
+    The context and page are automatically cleaned up after the test.
+    When tracing is enabled, trace files are saved to a temporary directory.
+
+    Args:
+        chromium_browser (Browser): The session-scoped browser instance.
+        request: The pytest request object containing test metadata.
+
+    Returns:
+        Generator[Page, None, None]: A generator yielding a Playwright Page
+                                    instance for the test.
     """
     context = chromium_browser.new_context()
     page = context.new_page()
@@ -52,8 +75,15 @@ def page(chromium_browser: Browser, request) -> Generator[Page, None, None]:
 @pytest.fixture
 def timestamp_converter_page(page: Page) -> TimestampConverterPage:
     """
-    Fixture to provide an instance of the TimestampConverterPage.
+    Fixture to provide an instance of the TimestampConverterPage
+    that wraps the provided Playwright Page.
 
-    Uses customized Page
+    Args:
+        page (Page): The Playwright Page instance to wrap.
+
+    Returns:
+        TimestampConverterPage: An instance of the TimestampConverterPage
+                               page object for interacting with the timestamp
+                               converter interface.
     """
     return TimestampConverterPage(page)
