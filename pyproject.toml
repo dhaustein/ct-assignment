@@ -52,7 +52,9 @@ line-length = 120
 
 [tool.mypy]
 python_version = "3.13"
-packages = ["packages"]
+files = [
+    "packages",
+]
 exclude = [
     ".venv",
     "build",
