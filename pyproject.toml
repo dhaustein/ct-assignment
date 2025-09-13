@@ -45,18 +45,20 @@ extend-exclude = [
   "build",
   "dist",
   "notebooks",
-  ".cache"
+  ".cache",
+  "libs/api_sdk"
 ]
 line-length = 120
 
 [tool.mypy]
 python_version = "3.13"
-packages = ["packages", "libs"]
+packages = ["packages"]
 exclude = [
     ".venv",
     "build",
     "dist",
     "__pycache__",
+    "libs/api_sdk",
 ]
 strict = true
 warn_return_any = true
