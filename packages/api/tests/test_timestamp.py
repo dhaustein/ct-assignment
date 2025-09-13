@@ -26,7 +26,7 @@ def test_convert_timestamp_noon(timestamp_client: TestTimestampApi, logger: logg
     res = timestamp_client.convert(timestamp=ts)
 
     assert res.status_code == 200
-    assert res.payload == "foo"
+    assert res.payload == "2023-01-01 12:00:00"
 
 def test_convert_timestamp_regular_time(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
