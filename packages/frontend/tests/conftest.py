@@ -1,4 +1,3 @@
-
 import pytest
 from playwright.sync_api import Page, sync_playwright, Browser
 from packages.frontend.tests.pages.timestamp_page import TimestampConverterPage
@@ -9,6 +8,7 @@ import os
 # expects playwright browser server to run in a container
 PLAYWRIGHT_WS_ENDPOINT = "ws://0.0.0.0:19323"
 PLAYWRIGHT_TRACING = True
+
 
 @pytest.fixture(scope="session")
 def chromium_browser() -> Generator[Browser, None, None]:
@@ -28,6 +28,7 @@ def chromium_browser() -> Generator[Browser, None, None]:
         browser = p.chromium.connect(PLAYWRIGHT_WS_ENDPOINT)
         yield browser
         browser.close()
+
 
 @pytest.fixture
 def page(chromium_browser: Browser, request) -> Generator[Page, None, None]:

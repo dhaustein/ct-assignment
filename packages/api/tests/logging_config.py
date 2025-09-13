@@ -8,6 +8,7 @@ LOG_DIR.mkdir(exist_ok=True)
 LOG_LEVEL = "DEBUG"
 LOG_FORMAT = "[%(asctime)s] %(levelname)s [%(name)s @ %(module)s:%(lineno)d]: %(message)s"
 
+
 def setup_logging(worker_id: str = "master") -> logging.Logger:
     """
     Setup logging for a specific worker so it works with pytest-xdist.

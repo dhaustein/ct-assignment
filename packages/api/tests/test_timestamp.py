@@ -1,8 +1,8 @@
-
 import pytest
 import logging
 from .fixtures.timestamp import TestTimestampApi
 from .utils.time_tools import unix_to_datetime_string, datetime_string_to_unix
+
 
 def test_convert_timestamp_midnight(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
@@ -16,6 +16,7 @@ def test_convert_timestamp_midnight(timestamp_client: TestTimestampApi, logger: 
     assert res.status_code == 200
     assert res.payload == unix_to_datetime_string(ts)
 
+
 def test_convert_timestamp_noon(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting a Unix noon timestamp to a date string.
@@ -28,6 +29,7 @@ def test_convert_timestamp_noon(timestamp_client: TestTimestampApi, logger: logg
     assert res.status_code == 200
     assert res.payload == "2023-01-01 12:00:00"
 
+
 def test_convert_timestamp_regular_time(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting a regular time Unix timestamp to a date string.
@@ -38,9 +40,14 @@ def test_convert_timestamp_regular_time(timestamp_client: TestTimestampApi, logg
     res = timestamp_client.convert(timestamp=ts)
 
     assert res.status_code == 200
-    assert res.payload == unix_to_datetime_string(ts, force_12h=True), f"Expected unix timestamp as int, got {res.payload}"
+    assert res.payload == unix_to_datetime_string(ts, force_12h=True), (
+        f"Expected unix timestamp as int, got {res.payload}"
+    )
 
-def test_convert_timestamp_one_second_after_midnight(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
+
+def test_convert_timestamp_one_second_after_midnight(
+    timestamp_client: TestTimestampApi, logger: logging.Logger
+) -> None:
     """
     Test converting a timestamp one second after midnight.
     """
@@ -51,6 +58,7 @@ def test_convert_timestamp_one_second_after_midnight(timestamp_client: TestTimes
 
     assert res.status_code == 200
     assert res.payload == unix_to_datetime_string(ts)
+
 
 def test_convert_timestamp_leap_day_midnight(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
@@ -64,6 +72,7 @@ def test_convert_timestamp_leap_day_midnight(timestamp_client: TestTimestampApi,
     assert res.status_code == 200
     assert res.payload == unix_to_datetime_string(ts, force_12h=True)
 
+
 def test_convert_timestamp_end_of_year(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting a timestamp at the end of a year.
@@ -75,6 +84,7 @@ def test_convert_timestamp_end_of_year(timestamp_client: TestTimestampApi, logge
 
     assert res.status_code == 200
     assert res.payload == unix_to_datetime_string(ts, force_12h=True)
+
 
 def test_convert_timestamp_epoch_start(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
@@ -88,6 +98,7 @@ def test_convert_timestamp_epoch_start(timestamp_client: TestTimestampApi, logge
     assert res.status_code == 200
     assert res.payload == unix_to_datetime_string(ts)
 
+
 def test_convert_timestamp_year_2038(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting a timestamp around the Year 2038 problem.
@@ -99,6 +110,7 @@ def test_convert_timestamp_year_2038(timestamp_client: TestTimestampApi, logger:
 
     assert res.status_code == 200
     assert res.payload == unix_to_datetime_string(ts)
+
 
 def test_convert_timestamp_pre_epoch(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
@@ -112,6 +124,7 @@ def test_convert_timestamp_pre_epoch(timestamp_client: TestTimestampApi, logger:
     assert res.status_code == 200
     assert res.payload == unix_to_datetime_string(ts)
 
+
 def test_convert_timestamp_future(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting a timestamp far in the future.
@@ -123,6 +136,7 @@ def test_convert_timestamp_future(timestamp_client: TestTimestampApi, logger: lo
 
     assert res.status_code == 200
     assert res.payload == unix_to_datetime_string(ts)
+
 
 def test_convert_timestamp_as_string(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
@@ -137,6 +151,7 @@ def test_convert_timestamp_as_string(timestamp_client: TestTimestampApi, logger:
     assert res.status_code == 200
     assert res.payload == unix_to_datetime_string(ts_int), f"Expected datetime as string, got {res.payload}"
 
+
 def test_convert_string_midnight(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting a midnight date string to a Unix timestamp.
@@ -148,6 +163,7 @@ def test_convert_string_midnight(timestamp_client: TestTimestampApi, logger: log
 
     assert res.status_code == 200
     assert res.payload == datetime_string_to_unix(dt)
+
 
 def test_convert_string_noon(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
@@ -161,6 +177,7 @@ def test_convert_string_noon(timestamp_client: TestTimestampApi, logger: logging
     assert res.status_code == 200
     assert res.payload == datetime_string_to_unix(dt)
 
+
 def test_convert_string_leap_day(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting a leap day datetime string.
@@ -173,6 +190,7 @@ def test_convert_string_leap_day(timestamp_client: TestTimestampApi, logger: log
     assert res.status_code == 200
     assert res.payload == datetime_string_to_unix(dt)
 
+
 def test_convert_string_invalid_value(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test sending an invalid string to the converter.
@@ -183,6 +201,7 @@ def test_convert_string_invalid_value(timestamp_client: TestTimestampApi, logger
 
     assert res.status_code == 200
     assert not res.payload, f"Expected empty payload for invalid string, got {res.payload}"
+
 
 def test_convert_string_non_existing_leap_day(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
@@ -197,6 +216,7 @@ def test_convert_string_non_existing_leap_day(timestamp_client: TestTimestampApi
     assert res.status_code == 200
     assert res.payload == 1677628800
 
+
 def test_convert_string_single_digit_date(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting a string with single-digit month/day.
@@ -208,6 +228,7 @@ def test_convert_string_single_digit_date(timestamp_client: TestTimestampApi, lo
 
     assert res.status_code == 200
     assert res.payload == datetime_string_to_unix(dt)
+
 
 def test_convert_string_alternative_format(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
@@ -221,6 +242,7 @@ def test_convert_string_alternative_format(timestamp_client: TestTimestampApi, l
     assert res.status_code == 200
     assert res.payload == 1204614000
 
+
 def test_convert_string_missing_secs(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting an incomplete datetime string (missing seconds).
@@ -232,6 +254,7 @@ def test_convert_string_missing_secs(timestamp_client: TestTimestampApi, logger:
 
     assert res.status_code == 200
     assert res.payload == 1681480800
+
 
 def test_convert_string_with_timezone(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
@@ -246,6 +269,7 @@ def test_convert_string_with_timezone(timestamp_client: TestTimestampApi, logger
     assert res.status_code == 200
     assert res.payload == 686282400
 
+
 def test_convert_string_12_hour_format(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting a string with AM/PM.
@@ -259,6 +283,7 @@ def test_convert_string_12_hour_format(timestamp_client: TestTimestampApi, logge
     assert res.status_code == 200
     assert res.payload == 1007564400
 
+
 def test_convert_string_unicode(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting a string with unicode characters.
@@ -270,6 +295,7 @@ def test_convert_string_unicode(timestamp_client: TestTimestampApi, logger: logg
 
     assert res.status_code == 200
     assert not res.payload, f"Expected empty payload for unicode string, got {res.payload}"
+
 
 def test_convert_empty_string(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
@@ -283,6 +309,7 @@ def test_convert_empty_string(timestamp_client: TestTimestampApi, logger: loggin
     assert res.status_code == 200
     assert not res.payload, f"Expected empty payload for empty string, got {res.payload}"
 
+
 def test_convert_float_timestamp(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting a float timestamp.
@@ -295,6 +322,7 @@ def test_convert_float_timestamp(timestamp_client: TestTimestampApi, logger: log
 
     assert res.status_code == 200
     assert res.payload == "2011-06-23 03:30:00"
+
 
 def test_convert_boolean_input(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """

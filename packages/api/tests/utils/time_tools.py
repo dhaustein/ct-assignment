@@ -21,14 +21,14 @@ def unix_to_datetime_string(timestamp: int, force_12h: bool = False) -> str:
     # this is where a Jira ticket or similar would be to track the bug
     if dt.hour == 0:
         # hotfix for the API defect around the 12th hour
-        return dt.strftime('%Y-%m-%d 12:%M:%S')
+        return dt.strftime("%Y-%m-%d 12:%M:%S")
 
     # BUG api inconsistent around 12h and 24h formats
     if force_12h:
         # hotfix for the API returning 12h date time format instead of 24h
-        return dt.strftime('%Y-%m-%d %I:%M:%S')
+        return dt.strftime("%Y-%m-%d %I:%M:%S")
 
-    return dt.strftime('%Y-%m-%d %H:%M:%S')
+    return dt.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def datetime_string_to_unix(datetime_string: str) -> int:
@@ -41,6 +41,6 @@ def datetime_string_to_unix(datetime_string: str) -> int:
     Returns:
         Unix timestamp as integer
     """
-    dt = datetime.strptime(datetime_string, '%Y-%m-%d %H:%M:%S')
+    dt = datetime.strptime(datetime_string, "%Y-%m-%d %H:%M:%S")
     dt = dt.replace(tzinfo=timezone.utc)
     return int(dt.timestamp())

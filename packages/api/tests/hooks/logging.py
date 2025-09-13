@@ -2,6 +2,7 @@ import pytest
 import logging
 from tests.logging_config import setup_logging
 
+
 @pytest.fixture(scope="session")
 def logger(request) -> logging.Logger:
     """

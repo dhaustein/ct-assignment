@@ -91,8 +91,8 @@ class TestTimestampApi(TimestampApi):
     def convert(
         self,
         timestamp: int | str,  # TODO should be Datetime instead of plain str?
-        cached: str | None = ""
-        ) -> ConvertedRes:
+        cached: str | None = "",
+    ) -> ConvertedRes:
         """
         Convert timestamp with enhanced logging and response wrapping.
 
@@ -118,6 +118,7 @@ class TestTimestampApi(TimestampApi):
         self.logger.debug("Conversion response payload: %s", res.data)
 
         return ConvertedRes(res)
+
 
 @pytest.fixture(scope="session")
 def timestamp_client(api_client: ApiClient, logger: logging.Logger) -> TestTimestampApi:

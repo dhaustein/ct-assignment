@@ -6,6 +6,7 @@ import logging
 # TODO should be part of config file
 BASE_URL = "https://helloacm.com"
 
+
 @pytest.fixture(scope="session")
 def api_client(logger: logging.Logger) -> Generator[ApiClient, None, None]:
     """Sessionfixture to create an API client"""
