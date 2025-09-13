@@ -11,10 +11,10 @@ I use `podman` here but `docker` or similar should work, too.
 ## Install the project with uv
 ```shell
 uv venv
-uv sync --all-extras
+uv sync --all-extras --dev --all-packages
 ```
 
-Note on the `--all-extras` - this will install __all__ dependencies for the whole
+Note on the long `sync` command - this will install __all__ dependencies for the whole
 monorepo so a developer can work across the entire codebase in one go.
 
 ## Re-generate the API SDK
