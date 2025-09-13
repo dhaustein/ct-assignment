@@ -1,4 +1,5 @@
 import pytest
+from pytest import FixtureRequest
 from playwright.sync_api import Page, sync_playwright, Browser
 from packages.frontend.tests.pages.timestamp_page import TimestampConverterPage
 from typing import Generator
@@ -31,7 +32,7 @@ def chromium_browser() -> Generator[Browser, None, None]:
 
 
 @pytest.fixture
-def page(chromium_browser: Browser, request) -> Generator[Page, None, None]:
+def page(chromium_browser: Browser, request: FixtureRequest) -> Generator[Page, None, None]:
     """
     Overrides the default 'page' fixture to create a new page for each test
     from the session-scoped browser.

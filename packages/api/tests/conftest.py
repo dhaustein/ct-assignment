@@ -1,6 +1,5 @@
 pytest_plugins = [
-    "tests.fixtures.common",
-    "tests.fixtures.timestamp",
-    "tests.hooks.logging",
-    # "hooks.bar",
+    "fixtures.common",
+    "fixtures.timestamp",
+    "hooks.logging",
 ]

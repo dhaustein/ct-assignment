@@ -1,6 +1,6 @@
 import logging
-from .fixtures.timestamp import TestTimestampApi
-from .utils.time_tools import unix_to_datetime_string, datetime_string_to_unix
+from fixtures.timestamp import TestTimestampApi
+from utils.time_tools import unix_to_datetime_string, datetime_string_to_unix
 
 
 def test_convert_timestamp_midnight(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:

@@ -1,6 +1,6 @@
 import pytest
 from api_sdk import ApiClient, TimestampApi, ApiResponse
-from api_sdk.models import ConvertTimestamp200Response
+from api_sdk.models.convert_timestamp200_response import ConvertTimestamp200Response
 from typing import Optional, Mapping, Union, Dict, Any
 import logging
 
