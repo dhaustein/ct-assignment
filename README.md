@@ -29,7 +29,7 @@ uv run --package api-sdk -- bash utils/generate-api-client.sh
 ## Run API tests (pytest, in parallel)
 
 ```shell
-uv run --package api -- pytest -v -n auto packages/api/tests/
+uv run --package api -- pytest -v -n auto packages/api/tests
 ```
 
 The test run automatically outputs logs to console as we as the
@@ -53,7 +53,7 @@ podman run --rm --name playwright-server -d --ipc=host -p 19323:19323 mcr.micros
 Run the tests:
 
 ```sh
-uv run --package frontend -- pytest -v packages/frontend/tests/ --browser-ws-endpoint ws://0.0.0.0:19323
+uv run --package frontend -- pytest -v packages/frontend/tests
 ```
 
 Playwright traces will be saved into `/tmp/playwright_traces/`
