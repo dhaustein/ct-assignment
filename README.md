@@ -3,10 +3,10 @@ Prerequisites:
 ```
 python3.13
 uv
+podman
 ```
 
-You willl also need some kind of container runtime, I use `podman` here but
-`docker` or similar should work.
+I use `podman` here but `docker` or similar should work, too.
 
 ## Install the project with uv
 ```shell
@@ -15,7 +15,7 @@ uv sync --all-extras
 ```
 
 Note on the `--all-extras` - this will install __all__ dependencies for the whole
-monorepo so a developer can work across the entire codebasein one go.
+monorepo so a developer can work across the entire codebase in one go.
 
 ## Re-generate the API SDK
 
