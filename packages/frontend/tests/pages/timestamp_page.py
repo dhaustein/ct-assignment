@@ -1,5 +1,7 @@
 from playwright.sync_api import Page
 
+TARGET_URL = "https://helloacm.com/tools/unix-timestamp-converter/"
+
 class TimestampConverterPage:
     """
     Page Object for the Unix Timestamp Converter page.
@@ -13,7 +15,7 @@ class TimestampConverterPage:
 
     def __init__(self, page: Page) -> None:
         self.page = page
-        self.url = "https://helloacm.com/tools/unix-timestamp-converter/"  # TODO extract to config file
+        self.url = TARGET_URL
 
         # Locators
         self.timestamp_input = page.locator("#timestamp_1")
