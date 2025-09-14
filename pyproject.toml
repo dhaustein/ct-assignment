@@ -8,10 +8,12 @@ authors = [
     {name = "dhaustein"},
 ]
 
+# global dependencies that apply to the entire monorepo
 dependencies = [
     "pytest>=8.4.2",
     "ruff>=0.13.0",
     "mypy>=1.18.0",
+    "pytest-rerunfailures>=16.0.1",
 ]
 
 [tool.uv.sources]

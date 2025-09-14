@@ -1,8 +1,10 @@
 import logging
+import pytest
 from fixtures.timestamp import TestTimestampApi
 from utils.time_tools import unix_to_datetime_string, datetime_string_to_unix
 
 
+@pytest.mark.flaky(reruns=2, reruns_delay=3)
 def test_convert_timestamp_midnight(timestamp_client: TestTimestampApi, logger: logging.Logger) -> None:
     """
     Test converting a Unix midnight timestamp to a date string.

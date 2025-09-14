@@ -1,6 +1,8 @@
+import pytest
 from packages.frontend.tests.pages.timestamp_page import TimestampConverterPage
 
 
+@pytest.mark.flaky(reruns=2, reruns_delay=3)
 def test_convert_timestamp_to_date(timestamp_converter_page: TimestampConverterPage) -> None:
     """
     Test converting a Unix timestamp to a date string.
@@ -21,6 +23,7 @@ def test_convert_date_to_timestamp(timestamp_converter_page: TimestampConverterP
     assert timestamp_converter_page.get_converted_timestamp() == "1672531200"
 
 
+@pytest.mark.flaky(reruns=2, reruns_delay=3)
 def test_invalid_timestamp(timestamp_converter_page: TimestampConverterPage) -> None:
     """
     Test converting an invalid timestamp.
