@@ -1,11 +1,11 @@
 # Unix Timestamp Converter Test Suite
 
-This project is a simple test suite for the Unix timestamp converter at
-[helloacm.com/tools/unix-timestamp-converter/](https://helloacm.com/tools/unix-timestamp-converter/)
+This project provides a test suite for the Unix timestamp converter at
+[helloacm.com/tools/unix-timestamp-converter/](https://helloacm.com/tools/unix-timestamp-converter/).
 
 ## Installation
 
-__Prerequisites__
+### Prerequisites
 
 ```
 python3.13
@@ -13,46 +13,47 @@ uv
 podman
 ```
 
-I use `podman` here but `docker` or any other container runtime should work, too.
+This guide uses `podman`, but `docker` or any other compatible container runtime
+can be substituted.
 
-Checkout the repository and install dependencies with:
+Check out the repository and install dependencies with:
 
 ```shell
 uv venv
 uv sync --all-extras --dev --all-packages
 ```
 
-Note on the long `sync` command - this will install __all__ dependencies for the
-whole monorepo so a developer can work across the entire codebase in one go.
+The `uv sync` command installs all dependencies for the entire monorepo,
+enabling a developer to work across the whole codebase without further setup.
 
 ## Testing
 
-### Re-generate the API SDK
+### Generate API SDK
 
-For the API tests to work, they need an API client to use. Here we generate it
-using the `openapi-generator` using the api's spec file as reference.
+The API tests require a client to interact with the service. This client is
+generated from the API's OpenAPI specification file using the `openapi-generator`.
 
 ```shell
 uv run --package api-sdk -- bash utils/generate-api-client.sh
 ```
 
-### Run API tests (pytest, in parallel)
+### Run API Tests (pytest, parallel)
+
+Note: The API begins to rate-limit requests after approximately 10 attempts.
 
 ```shell
 uv run --package api -- pytest -v -n auto packages/api/tests
 ```
 
-The test run automatically outputs logs to console as well as into the
+The test run automatically outputs logs to the console and saves them to the
 `packages/api/logs` directory.
 
-### Run UI E2E tests (Playwright)
+### Run UI E2E Tests (Playwright)
 
-For UI testing, this project runs the browsers inside the official Playwright
-Docker container.
-
-The local test runner will connect to its containerized browser server.
-
-This avoids installing browser binaries on the host machine.
+This project uses the official Playwright Docker container to run browsers
+for UI testing. This setup allows the local test runner to connect to the
+browser server running inside the container, avoiding the need to install
+browser binaries on the host machine.
 
 Start the Playwright server:
 
@@ -74,16 +75,16 @@ Run the tests:
 uv run --package frontend -- pytest -v packages/frontend/tests
 ```
 
-Playwright traces will be saved into `/tmp/playwright_traces/`
+Playwright traces will be saved to `/tmp/playwright_traces/`.
 
-When done testing, stop and (if wanted) remove the container:
+When testing is complete, stop and optionally remove the container:
 
 ```shell
 podman stop playwright-server
 podman rm playwright-server
 ```
 
-### Run performance tests (k6)
+### Run Performance Tests (k6)
 
 Download the k6 binary:
 
@@ -93,20 +94,26 @@ K6_VERSION=$(cat packages/api/tests/perf/bin/.k6_version) && \
     tar -xz -C packages/api/tests/perf/bin/ --strip-components=1
 ```
 
-Note that this targets Linux specifically, the binaries for other OSes are
-different and you will want to download them from the k6 Release page manually.
+Note: This command is specific to Linux. For other operating systems,
+please download the appropriate binary from the k6 releases page.
 
-Add k6 to your PATH:
+Add k6 to your `PATH`:
 
 ```shell
 export PATH="$PATH:$(pwd)/packages/api/tests/perf/bin/"
 ```
 
-Run perf tests:
+Run performance tests:
 
 ```shell
 K6_WEB_DASHBOARD=true k6 run --linger --no-usage-report packages/api/tests/perf/test_perf_timestamp.js
 ```
 
-This will return a link to the report web page, which will stay open until you
-exit the process manually.
+Note: The API begins to rate-limit requests after approximately 10 attempts.
+
+This command outputs a link to a web dashboard for the test report.
+The dashboard will remain accessible until the process is manually terminated.
+
+# Docs
+
+Documentation related to this assignment is located in the `/docs` directory.

@@ -1,7 +1,5 @@
 # Custom
 *.pdf
-# skip docs dir for now
-docs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
