@@ -1,4 +1,9 @@
-Prerequisites:
+# Unix Timestamp Converter Test Suite
+
+This project is a simple test suite for the Unix timestamp converter at
+[helloacm.com/tools/unix-timestamp-converter/](https://helloacm.com/tools/unix-timestamp-converter/)
+
+## Prerequisites
 
 ```
 python3.13
@@ -6,16 +11,17 @@ uv
 podman
 ```
 
-I use `podman` here but `docker` or similar should work, too.
+I use `podman` here but `docker` or any other container runtime should work, too.
 
 ## Install the project with uv
+
 ```shell
 uv venv
 uv sync --all-extras --dev --all-packages
 ```
 
-Note on the long `sync` command - this will install __all__ dependencies for the whole
-monorepo so a developer can work across the entire codebase in one go.
+Note on the long `sync` command - this will install __all__ dependencies for the
+whole monorepo so a developer can work across the entire codebase in one go.
 
 ## Re-generate the API SDK
 
@@ -32,7 +38,7 @@ uv run --package api-sdk -- bash utils/generate-api-client.sh
 uv run --package api -- pytest -v -n auto packages/api/tests
 ```
 
-The test run automatically outputs logs to console as we as the
+The test run automatically outputs logs to console as well as into the
 `packages/api/logs` directory.
 
 ## Run UI E2E tests (Playwright)
@@ -46,13 +52,21 @@ This avoids installing browser binaries on the host machine.
 
 Start the Playwright server:
 
-```sh
-podman run --rm --name playwright-server -d --ipc=host -p 19323:19323 mcr.microsoft.com/playwright:v1.55.0-noble npx playwright run-server --host 0.0.0.0 --port 19323
+```shell
+podman run \
+    --rm \
+    --name playwright-server \
+    -d \
+    --ipc=host \
+    -p 19323:19323 \
+    --pull=always \
+    mcr.microsoft.com/playwright:v1.55.0-noble \
+    npx playwright run-server --host 0.0.0.0 --port 19323
 ```
 
 Run the tests:
 
-```sh
+```shell
 uv run --package frontend -- pytest -v packages/frontend/tests
 ```
 
@@ -60,7 +74,7 @@ Playwright traces will be saved into `/tmp/playwright_traces/`
 
 When done testing, stop and (if wanted) remove the container:
 
-```sh
+```shell
 podman stop playwright-server
 podman rm playwright-server
 ```
@@ -69,23 +83,24 @@ podman rm playwright-server
 
 Download the k6 binary:
 
-```sh
+```shell
 K6_VERSION=$(cat packages/api/tests/perf/bin/.k6_version) && \
-wget "https://github.com/grafana/k6/releases/download/v${K6_VERSION}/k6-v${K6_VERSION}-linux-amd64.tar.gz" -O - | \
-tar -xz -C packages/api/tests/perf/bin/ --strip-components=1
+    wget "https://github.com/grafana/k6/releases/download/v${K6_VERSION}/k6-v${K6_VERSION}-linux-amd64.tar.gz" -O - | \
+    tar -xz -C packages/api/tests/perf/bin/ --strip-components=1
 ```
-Note that this targets Linux specifically, the binaries for other OS-es are
+
+Note that this targets Linux specifically, the binaries for other OSes are
 different and you will want to download them from the k6 Release page manually.
 
 Add k6 to your PATH:
 
-```sh
-PATH=$PATH:~/Temp/ct-assignment/packages/api/tests/perf/bin/
+```shell
+export PATH="$PATH:$(pwd)/packages/api/tests/perf/bin/"
 ```
 
 Run perf tests:
 
-```sh
+```shell
 K6_WEB_DASHBOARD=true k6 run --linger --no-usage-report packages/api/tests/perf/test_perf_timestamp.js
 ```
 
