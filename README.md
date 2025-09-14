@@ -3,7 +3,9 @@
 This project is a simple test suite for the Unix timestamp converter at
 [helloacm.com/tools/unix-timestamp-converter/](https://helloacm.com/tools/unix-timestamp-converter/)
 
-## Prerequisites
+## Installation
+
+__Prerequisites__
 
 ```
 python3.13
@@ -13,7 +15,7 @@ podman
 
 I use `podman` here but `docker` or any other container runtime should work, too.
 
-## Install the project with uv
+Checkout the repository and install dependencies with:
 
 ```shell
 uv venv
@@ -23,7 +25,9 @@ uv sync --all-extras --dev --all-packages
 Note on the long `sync` command - this will install __all__ dependencies for the
 whole monorepo so a developer can work across the entire codebase in one go.
 
-## Re-generate the API SDK
+## Testing
+
+### Re-generate the API SDK
 
 For the API tests to work, they need an API client to use. Here we generate it
 using the `openapi-generator` using the api's spec file as reference.
@@ -32,7 +36,7 @@ using the `openapi-generator` using the api's spec file as reference.
 uv run --package api-sdk -- bash utils/generate-api-client.sh
 ```
 
-## Run API tests (pytest, in parallel)
+### Run API tests (pytest, in parallel)
 
 ```shell
 uv run --package api -- pytest -v -n auto packages/api/tests
@@ -41,7 +45,7 @@ uv run --package api -- pytest -v -n auto packages/api/tests
 The test run automatically outputs logs to console as well as into the
 `packages/api/logs` directory.
 
-## Run UI E2E tests (Playwright)
+### Run UI E2E tests (Playwright)
 
 For UI testing, this project runs the browsers inside the official Playwright
 Docker container.
@@ -79,7 +83,7 @@ podman stop playwright-server
 podman rm playwright-server
 ```
 
-## Run performance tests (k6)
+### Run performance tests (k6)
 
 Download the k6 binary:
 
