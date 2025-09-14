@@ -114,6 +114,20 @@ Note: The API begins to rate-limit requests after approximately 10 attempts.
 This command outputs a link to a web dashboard for the test report.
 The dashboard will remain accessible until the process is manually terminated.
 
+# Development
+
+Run linting and type checking:
+
+```shell
+uv run -- ruff check
+uv run -- mypy
+```
+
+You can auto-format linting issues with:
+```shell
+uv run -- ruff format
+```
+
 # Docs
 
 Documentation related to this assignment is located in the `/docs` directory.
