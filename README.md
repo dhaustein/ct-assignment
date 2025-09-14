@@ -64,3 +64,30 @@ When done testing, stop and (if wanted) remove the container:
 podman stop playwright-server
 podman rm playwright-server
 ```
+
+## Run performance tests (k6)
+
+Download the k6 binary:
+
+```sh
+K6_VERSION=$(cat packages/api/tests/perf/bin/.k6_version) && \
+wget "https://github.com/grafana/k6/releases/download/v${K6_VERSION}/k6-v${K6_VERSION}-linux-amd64.tar.gz" -O - | \
+tar -xz -C packages/api/tests/perf/bin/ --strip-components=1
+```
+Note that this targets Linux specifically, the binaries for other OS-es are
+different and you will want to download them from the k6 Release page manually.
+
+Add k6 to your PATH:
+
+```sh
+PATH=$PATH:~/Temp/ct-assignment/packages/api/tests/perf/bin/
+```
+
+Run perf tests:
+
+```sh
+K6_WEB_DASHBOARD=true k6 run --linger --no-usage-report packages/api/tests/perf/test_perf_timestamp.js
+```
+
+This will return a link to the report web page, which will stay open until you
+exit the process manually.
