@@ -140,6 +140,6 @@ What is missing and should be added if this was a real project:
 * CI/CD pipeline that would trigger linting, testing, security scanning etc in new PRs
 as well as the CD part for releases
 * .devcontainer for easier distribution of the project
-* EditorConfig for consistent coding style across the maintainers
+* ~~EditorConfig for consistent coding style across the maintainers~~
 * Optimized build/test processes for the monorepo (e.g., only test affected packages)
 * IaC + observability stack for production deployment
