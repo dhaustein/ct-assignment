@@ -1,5 +1,6 @@
 # Custom
 *.pdf
+packages/api/tests/perf/bin/k6
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
