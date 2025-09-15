@@ -3,6 +3,28 @@
 This project provides a test suite for the Unix timestamp converter at
 [helloacm.com/tools/unix-timestamp-converter/](https://helloacm.com/tools/unix-timestamp-converter/).
 
+## Quickstart
+
+```shell
+$ make help
+Makefile for the Unix Timestamp Converter Test Suite project
+
+Usage:
+  make install                  - Create virtual environment and install dependencies
+  make generate-api-client      - Generate the API SDK client
+  make lint                     - Run all linters (ruff, mypy)
+  make lint-ruff                - Run ruff linter
+  make lint-mypy                - Run mypy type checker
+  make format                   - Run ruff formatter
+  make test                     - Run all tests (API and UI)
+  make test-api                 - Run API tests
+  make test-ui                  - Run UI E2E tests
+  make test-perf                - Run performance tests
+  make start-playwright-server  - Start the Playwright Docker container
+  make stop-playwright-server   - Stop and remove the Playwright Docker container
+  make download-k6              - Download the k6 binary for performance testing
+```
+
 ## Installation
 
 ### Prerequisites
@@ -11,6 +33,7 @@ This project provides a test suite for the Unix timestamp converter at
 python3.13
 uv
 podman
+make
 ```
 
 This guide uses `podman`, but `docker` or any other compatible container runtime
@@ -136,7 +159,7 @@ Documentation related to this assignment is located in the `/docs` directory.
 
 What is missing and should be added if this was a real project:
 
-* Makefile or similar to wrap around the commands
+* ~~Makefile or similar to wrap around the commands~~
 * CI/CD pipeline that would trigger linting, testing, security scanning etc in new PRs
 as well as the CD part for releases
 * .devcontainer for easier distribution of the project
