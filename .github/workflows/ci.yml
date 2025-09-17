@@ -21,20 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Install uv"
-        uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-
-      - name: "Set up Python"
-        uses: actions/setup-python@v5
-        with:
-          python-version-file: ".python-version"
-
-      - name: "Install dependencies"
-        run: |
-          make install
+      - name: "Setup Python environment"
+        uses: ./.github/actions/setup-python-env
 
       - name: "Lint with ruff"
         run: |
@@ -51,20 +39,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Install uv"
-        uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-
-      - name: "Set up Python"
-        uses: actions/setup-python@v5
-        with:
-          python-version-file: ".python-version"
-
-      - name: "Install dependencies"
-        run: |
-          make install
+      - name: "Setup Python environment"
+        uses: ./.github/actions/setup-python-env
 
       # api client version should be committed in the repository
       # so re-generating it in the CI is skipped unless explicitly requested
@@ -79,7 +55,48 @@ jobs:
         run: |
           make test-api
 
-  # TODO add e2e ui tests
+  test-ui:
+    name: "Run UI tests"
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright/python:v1.55.0-noble
+      options: --ipc=host --user 1001
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Install uv"
+        run: |
+          pip install --user uv
+
+      - name: "Install project dependencies"
+        # TODO sync only frontend package group
+        run: |
+          uv sync --all-extras --dev --all-packages
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      - name: "Install chromium and dependencies"
+        run: |
+          npx playwright install --with-deps chromium
+
+      - name: "Run UI tests"
+        run: |
+          uv run --package frontend -- pytest -v packages/frontend/tests
+        env:
+          PLAYWRIGHT_TRACING: True
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-traces
+          path: /tmp/playwright_traces/
 
   # TODO add security checks
 

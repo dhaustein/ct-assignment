@@ -5,29 +5,39 @@ from packages.frontend.tests.pages.timestamp_page import TimestampConverterPage
 from typing import Generator
 import os
 
-# TODO the value should be fetched from a configuration file
-# expects playwright browser server to run in a container
-PLAYWRIGHT_WS_ENDPOINT = "ws://0.0.0.0:19323"
-PLAYWRIGHT_TRACING = True
+# If PLAYWRIGHT_WS_ENDPOINT is set, we connect to a remote server (for local)
+# otherwise  launch a local browser instance (used in CI)
+PLAYWRIGHT_WS_ENDPOINT = os.environ.get("PLAYWRIGHT_WS_ENDPOINT")
+# tracing is disabled by default
+PLAYWRIGHT_TRACING = os.environ.get("PLAYWRIGHT_TRACING", "False").lower() == "True"
 
 
 @pytest.fixture(scope="session")
 def chromium_browser() -> Generator[Browser, None, None]:
     """
-    Main browser fixture that connects to the running browser server in container.
+    Main browser fixture.
 
-    This fixture establishes a connection to a Playwright browser server running
-    in a container and provides a Browser instance for the entire test session.
+    If the PLAYWRIGHT_WS_ENDPOINT environment variable is set, this fixture
+    connects to a remote Playwright browser server. This is used for local
+    testing with the 'make test-ui' command.
 
-    The browser is closed when the session ends.
+    If the environment variable is not set, it launches a new local browser
+    instance, used in CI container where the browsers are available directly.
+
+    The browser is closed automatically when the session ends.
 
     Returns:
         Generator[Browser, None, None]: A generator yielding a Playwright Browser
-                                       instance connected to the remote server.
+                                       instance.
     """
     with sync_playwright() as p:
-        browser = p.chromium.connect(PLAYWRIGHT_WS_ENDPOINT)
+        if PLAYWRIGHT_WS_ENDPOINT:
+            browser = p.chromium.connect(PLAYWRIGHT_WS_ENDPOINT)
+        else:
+            browser = p.chromium.launch()
+
         yield browser
+
         browser.close()
 
 
