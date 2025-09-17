@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      regenerate_api_client:
+        description: 'Re-Generate API client'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Install uv"
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+
+      - name: "Install dependencies"
+        run: |
+          make install
+
+      - name: "Lint with ruff"
+        run: |
+          make lint-ruff
+
+      - name: "Type check with mypy"
+        run: |
+          make lint-mypy
+
+  test-api:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Install uv"
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+
+      - name: "Install dependencies"
+        run: |
+          make install
+
+      # api client version should be committed in the repository
+      # so re-generating it in the CI is skipped unless explicitly requested
+      - name: "Generate API client"
+        if: >
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.regenerate_api_client == 'true') ||
+          (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'regenerate-api-client'))
+        run: |
+          make generate-api-client
+
+      - name: "Run API tests"
+        run: |
+          make test-api
+
+  # TODO add e2e ui tests
+
+  # TODO add security checks
+
+  # TODO add perf tests?
