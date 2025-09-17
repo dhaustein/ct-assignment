@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright/python:v1.55.0-noble
-      options: --ipc=host
+      options: --ipc=host --user 1001
 
     steps:
       - uses: actions/checkout@v4
