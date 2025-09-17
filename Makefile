@@ -72,7 +72,7 @@ test-api:
 
 test-ui: start-playwright-server
 	@echo "Running UI E2E tests..."
-	uv run --package frontend -- pytest -v packages/frontend/tests
+	PLAYWRIGHT_WS_ENDPOINT=ws://0.0.0.0:19323 uv run --package frontend -- pytest -v packages/frontend/tests
 
 start-playwright-server:
 	@echo "Starting Playwright server..."

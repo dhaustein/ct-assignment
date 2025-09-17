@@ -55,7 +55,36 @@ jobs:
         run: |
           make test-api
 
-  # TODO add e2e ui tests
+  test-ui:
+    name: "Run UI tests"
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright/python:v1.55.0-noble
+      options: --ipc=host
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Install uv"
+        run: pip install uv
+
+      - name: "Install project dependencies"
+        # TODO sync only frontend package group
+        run: uv sync --all-extras --dev --all-packages
+
+      - name: "Install chromium and dependencies"
+        run: npx playwright install --with-deps chromium
+
+      - name: "Run UI tests"
+        run: uv run --package frontend -- pytest -v packages/frontend/tests
+        env:
+          PLAYWRIGHT_TRACING: True
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-traces
+          path: /tmp/playwright_traces/
 
   # TODO add security checks
 
