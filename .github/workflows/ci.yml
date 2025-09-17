@@ -66,17 +66,25 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: "Install uv"
-        run: pip install uv
+        run: |
+          pip install uv
 
       - name: "Install project dependencies"
         # TODO sync only frontend package group
-        run: uv sync --all-extras --dev --all-packages
+        run: |
+          uv sync --all-extras --dev --all-packages
+
+      - name: "Install npm dependencies"
+        run: |
+          npm ci
 
       - name: "Install chromium and dependencies"
-        run: npx playwright install --with-deps chromium
+        run: |
+          npx playwright install --with-deps chromium
 
       - name: "Run UI tests"
-        run: uv run --package frontend -- pytest -v packages/frontend/tests
+        run: |
+          uv run --package frontend -- pytest -v packages/frontend/tests
         env:
           PLAYWRIGHT_TRACING: True
 
