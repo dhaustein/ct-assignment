@@ -74,7 +74,11 @@ jobs:
         run: |
           uv sync --all-extras --dev --all-packages
 
-      - name: "Install npm dependencies"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
         run: |
           npm ci
 
