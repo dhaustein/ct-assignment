@@ -1,7 +1,7 @@
 import logging
 import pytest
-from fixtures.timestamp import TestTimestampApi
-from utils.time_tools import unix_to_datetime_string, datetime_string_to_unix
+from packages.api.tests.fixtures.timestamp import TestTimestampApi
+from packages.api.tests.utils.time_tools import unix_to_datetime_string, datetime_string_to_unix
 
 
 @pytest.mark.flaky(reruns=2, reruns_delay=3)
