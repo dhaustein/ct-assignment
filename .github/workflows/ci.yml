@@ -67,7 +67,7 @@ jobs:
 
       - name: "Install uv"
         run: |
-          pip install uv
+          pip install --user uv
 
       - name: "Install project dependencies"
         # TODO sync only frontend package group
